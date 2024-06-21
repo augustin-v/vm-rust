@@ -1,0 +1,3 @@
+mod hardware {
+    mod register;
+}
