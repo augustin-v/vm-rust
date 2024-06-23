@@ -1,3 +1,5 @@
+const PC_START: u16 = 0x3000;
+
 pub struct Registers {
     pub r0: u16,
     pub r1: u16,
@@ -58,4 +60,23 @@ impl Registers {
             _ => panic!("Index out of bound"),
         }     
     }
+
+    pub fn update_r_cond_register(&mut self, r: u16) {
+        if self.get(r) == 0 {
+            self.update(9, ConditionFlag::ZRO as u16);
+        } else if (self.get(r) >> 15) != 0 {
+            self.update(9, ConditionFlag::NEG as u16);
+        } else {
+            self.update(9, ConditionFlag::POS as u16);
+        }
+    }
+}
+// The RCOND register stores condition flags that represents information about
+// the most recent computation. It's used for checking logical conditions.
+// The LC-3 uses only 3 condition flags which indicate the sign of the previous calculation.
+
+enum ConditionFlag {
+    POS = 1 << 0,
+    ZRO = 1 << 1,
+    NEG = 1 << 2,
 }
